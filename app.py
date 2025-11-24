@@ -21,8 +21,28 @@ def registered():
           "first_name": name,
           "email": email
         }
-        
+
     return render_template('registered.html', **data)
+
+@app.route("/contact")
+def contact():
+    return render_template('contact.html')
+
+@app.route("/submit", methods=['POST'])
+def message():
+    if request.method == 'POST':
+
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('text')
+
+        data = {
+          "first_name": name,
+          "email": email,
+          "message": message
+        }
+
+    return render_template('contacted.html', **data)
 
 
 
