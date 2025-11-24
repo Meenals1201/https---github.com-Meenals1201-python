@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Registration</h1>
+    <p>Hi, join with us by filling up the form.</p>
+
+        <form action="registered" method="POST" >
+        <p>Name: <input type="text" label="name" required></p>
+        <p>Email: <input type="email" label="email" required></p>
+        
+        <fieldset>
+            <legend>What would you like to read about?</legend>
+            <input type="checkbox" name="interests" value="industry"> Industry
+            <input type="checkbox" name="interests" value="technical"> Technical  
+            <input type="checkbox" name="interests" value="career"> Career
+        </fieldset>
+
+        <p>Your Role: 
+            <select name="role">
+                <option value="member">Writer</option>
+                <option value="administrator">Administrator</option>
+            </select>
+        </p>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
