@@ -40,7 +40,10 @@ def like_article():
             conn.commit()
         
    
-        return redirect('/member-page')
+        if session['user_role'] == 'admin':
+            return redirect('/admin-page')
+        else:
+            return redirect('/member-page')
     else:
         return redirect('/login')
 
