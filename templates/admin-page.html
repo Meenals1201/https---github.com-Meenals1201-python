@@ -25,13 +25,19 @@
             <p>{{ article[2] }}</p>
             <p>Featured: {% if article[4] == 1 %}Yes{% else %}No{% endif %}</p>
 
+            <form action="/set-featured" method="POST"">
+            <input type="hidden" name="article_id" value="{{ article[0] }}">
+            <button type="submit">Set as Featured</button>
+            </form>
+
             <form action="/like" method="POST">
             <input type="hidden" name="article_id" value="{{ article[0] }}">
             <button type="submit">Like</button>
             </form>
         
             <p>Likes: {{ like_counts[article[0]] }}</p>
-            
+            <p>Featured: {{ article[4] }}</p>
+
         {% endfor %}
     {% else %}
         <p>No articles yet. <a href="/add-articles">Add your first article!</a></p>
