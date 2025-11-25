@@ -114,6 +114,13 @@ def admin_page():
         cursor.execute('''SELECT * FROM articles''')
         articles = cursor.fetchall()
 
+        like_counts = {}
+        for article in articles:
+            article_id = article[0]
+            cursor.execute('''SELECT COUNT(*) FROM likes WHERE article_id = %s''', (article_id,))
+            like_count = cursor.fetchone()[0]
+            like_counts[article_id] = like_count
+
         return render_template('admin-page.html', name=name, articles=articles)
     else:
         return "This page can only be accessed by admins."
