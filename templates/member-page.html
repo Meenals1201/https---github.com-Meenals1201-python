@@ -17,11 +17,16 @@
             <p>{{ article[2] }}</p>
             <p>Featured: {% if article[4] == 1 %}Yes{% else %}No{% endif %}</p>
         
+            <form action="/like" method="POST" style="display: inline;">
+            <input type="hidden" name="article_id" value="{{ article[0] }}">
+            <button type="submit">❤️ Like</button>
+            </form>
+
         {% endfor %}
     {% else %}
         <p>No articles yet. <a href="/add-articles">Add your first article!</a></p>
     {% endif %}
-    
+
         <a href='/logout'>Logout</a>
 </body>
 </html>

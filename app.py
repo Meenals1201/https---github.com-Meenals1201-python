@@ -22,6 +22,30 @@ database=app.config['MYSQL_DB']
 cursor = conn.cursor()
 
 
+@app.route("/like", methods=['POST'])
+def like_article():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        article_id = request.form.get('article_id')
+        
+        
+        cursor.execute('''SELECT * FROM likes WHERE user_id = %s AND article_id = %s''', 
+                      (user_id, article_id))
+        existing_like = cursor.fetchone()
+        if not existing_like:
+       
+            cursor.execute('''INSERT INTO likes (user_id, article_id) 
+                           VALUES (%s, %s)''', 
+                          (user_id, article_id))
+            conn.commit()
+        
+   
+        return redirect('/member-page')
+    else:
+        return redirect('/login')
+
+
+
 @app.route("/add-articles")
 def add_article():
     if 'user_id' in session and session['user_role'] == 'admin':
