@@ -121,7 +121,7 @@ def admin_page():
             like_count = cursor.fetchone()[0]
             like_counts[article_id] = like_count
 
-        return render_template('admin-page.html', name=name, articles=articles)
+        return render_template('admin-page.html', name=name, articles=articles, like_counts=like_counts)
     else:
         return "This page can only be accessed by admins."
 
