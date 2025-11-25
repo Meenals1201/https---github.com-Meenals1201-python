@@ -8,6 +8,20 @@
 <body>
     <h1>Welcome to member's dashboard.</h1>
         <p>Welcome {{ name }}!</p>
+
+         <h2>Articles</h2>
+        {% if articles %}
+        {% for article in articles %}
+        
+            <h3>{{ article[1] }}</h3> 
+            <p>{{ article[2] }}</p>
+            <p>Featured: {% if article[4] == 1 %}Yes{% else %}No{% endif %}</p>
+        
+        {% endfor %}
+    {% else %}
+        <p>No articles yet. <a href="/add-articles">Add your first article!</a></p>
+    {% endif %}
+    
         <a href='/logout'>Logout</a>
 </body>
 </html>
