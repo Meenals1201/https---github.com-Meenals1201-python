@@ -22,10 +22,10 @@ database=app.config['MYSQL_DB']
 cursor = conn.cursor()
 
 
-@app.route("/admin/contacts")
+@app.route("/admin-contacts")
 def admin_contacts():
     if 'user_id' in session and session['user_role'] == 'admin':
-        cursor.execute('''SELECT * FROM contactstable''')  # No ordering
+        cursor.execute('''SELECT * FROM contactstable''')
         contacts = cursor.fetchall()
         return render_template('admin-contacts.html', contacts=contacts)
     else:
@@ -91,7 +91,7 @@ def login_process():
         else:
             return "Invalid email or password. <a href='/login'>Try again</a>"
 
-@app.route("/homepage")
+@app.route("/")
 def homepage():
     return render_template('homepage.html')
 
