@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 from dotenv import load_dotenv
 import os
 import mysql.connector
 
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
 
 app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
@@ -20,9 +21,75 @@ database=app.config['MYSQL_DB']
 
 cursor = conn.cursor()
 
+
+@app.route("/admin/contacts")
+def admin_contacts():
+    if 'user_id' in session and session['user_role'] == 'admin':
+        cursor.execute('''SELECT * FROM contactstable''')  # No ordering
+        contacts = cursor.fetchall()
+        return render_template('admin-contacts.html', contacts=contacts)
+    else:
+        return "Access denied. Admins only."
+    
+@app.route("/member-page")
+def member_page():
+    if 'user_id' in session and session['user_role'] == 'member':
+        name = session['user_name']
+        return render_template('member-page.html', name=name)
+    else:
+        return redirect('/login')
+
+@app.route("/admin-page")
+def admin_page():
+    if 'user_id' in session and session['user_role'] == 'admin':
+        name = session['user_name']
+        return render_template('admin-page.html', name=name)
+    else:
+        return "This page can only be accessed by admins."
+
+
+@app.route("/dashboard")
+def dashboard():
+
+    if 'user_id' in session:
+        name = session['user_name']
+        role = session['user_role']
+        return f"Welcome to Dashboard, {name}! (Role: {role})<br><a href='/logout'>Logout</a>"
+    else:
+        return redirect('/login')
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect('/homepage')
+
 @app.route("/login")
 def login():
     return render_template('login.html')
+
+@app.route("/login", methods=['POST'])
+def login_process():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        cursor.execute('''SELECT * FROM userstable WHERE email = %s AND password = %s''', 
+                      (email, password))
+        user = cursor.fetchone()
+        if user:
+
+            user_id, name, user_email, user_password, role, created_date = user 
+            session['user_id'] = user_id
+            session['user_name'] = name
+            session['user_role'] = role
+            
+            if role == 'admin':
+                return redirect('/admin-page')
+            else:
+                return redirect('/member-page')
+            
+        else:
+            return "Invalid email or password. <a href='/login'>Try again</a>"
 
 @app.route("/homepage")
 def homepage():
