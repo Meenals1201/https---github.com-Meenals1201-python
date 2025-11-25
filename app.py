@@ -27,9 +27,9 @@ def set_featured():
     if 'user_id' in session and session['user_role'] == 'admin':
         article_id = request.form.get('article_id')
         
-        cursor.execute('''UPDATE articles SET is_featured = "no"''')
+        cursor.execute('''UPDATE articles SET is_featured = 0''')
         
-        cursor.execute('''UPDATE articles SET is_featured = "yes" WHERE id = %s''', (article_id,))
+        cursor.execute('''UPDATE articles SET is_featured = 1 WHERE id = %s''', (article_id,))
         conn.commit()
         
         return redirect('/admin-page')
