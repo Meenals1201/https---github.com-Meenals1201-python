@@ -22,6 +22,8 @@
             <button type="submit">Like</button>
             </form>
 
+            <p>Likes: {{ like_counts[article[0]] }}</p>
+
         {% endfor %}
     {% else %}
         <p>No articles yet. <a href="/add-articles">Add your first article!</a></p>

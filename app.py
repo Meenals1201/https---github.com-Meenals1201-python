@@ -95,7 +95,14 @@ def member_page():
         cursor.execute('''SELECT * FROM articles''')
         articles = cursor.fetchall()
 
-        return render_template('member-page.html', name=name, articles=articles)
+        like_counts = {}
+        for article in articles:
+            article_id = article[0]
+            cursor.execute('''SELECT COUNT(*) FROM likes WHERE article_id = %s''', (article_id,))
+            like_count = cursor.fetchone()[0]
+            like_counts[article_id] = like_count
+
+        return render_template('member-page.html', name=name, articles=articles, like_counts=like_counts)
     else:
         return redirect('/login')
 
