@@ -66,7 +66,11 @@ def admin_contacts():
 def member_page():
     if 'user_id' in session and session['user_role'] == 'member':
         name = session['user_name']
-        return render_template('member-page.html', name=name)
+
+        cursor.execute('''SELECT * FROM articles''')
+        articles = cursor.fetchall()
+
+        return render_template('member-page.html', name=name, articles=articles)
     else:
         return redirect('/login')
 
@@ -74,7 +78,11 @@ def member_page():
 def admin_page():
     if 'user_id' in session and session['user_role'] == 'admin':
         name = session['user_name']
-        return render_template('admin-page.html', name=name)
+
+        cursor.execute('''SELECT * FROM articles''')
+        articles = cursor.fetchall()
+
+        return render_template('admin-page.html', name=name, articles=articles)
     else:
         return "This page can only be accessed by admins."
 
@@ -104,8 +112,8 @@ def login_process():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        cursor.execute('''SELECT * FROM userstable WHERE email = %s AND password = %s''', 
-                      (email, password))
+        cursor.execute('''SELECT * FROM userstable WHERE email = %s AND password = %s''', (email, password))
+                     
         user = cursor.fetchone()
         if user:
 
@@ -139,8 +147,8 @@ def registered():
         password = request.form.get('password')
 
         cursor.execute('''INSERT INTO userstable (name, email, password, role) 
-               VALUES (%s, %s, %s, %s)''', 
-               (name, email, password, 'member'))
+               VALUES (%s, %s, %s, %s)''', (name, email, password, 'member'))
+               
         conn.commit()
 
         data = {
@@ -163,8 +171,8 @@ def message():
         message = request.form.get('text')
 
         cursor.execute('''INSERT INTO contactstable (name, email, message) 
-                       VALUES (%s, %s, %s)''', 
-                       (name, email, message))
+                       VALUES (%s, %s, %s)''', (name, email, message))
+                       
         conn.commit()
 
         data = {
