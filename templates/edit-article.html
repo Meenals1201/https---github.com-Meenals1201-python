@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <h1>Edit Article</h1>
+    <a href="/admin-page">Go back to admin-page</a>
+    
+    <form action="/edit-article/{{ article[0] }}" method="POST">
+        <p>Title: <input type="text" name="title" value="{{ article[1] }}" required></p>
+        <p>Content: <textarea name="content" required>{{ article[2] }}</textarea></p>
+        <p>Featured: <input type="checkbox" name="is_featured" {% if article[4] == 'yes' %}checked{% endif %}></p>
+        <button type="submit">Update Article</button>
+    </form>
+</body>
+</html>

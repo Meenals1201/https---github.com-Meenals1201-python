@@ -13,7 +13,7 @@
             <li>Add new article<a href="/add-articles">Add</a></li>
             <li>Edit/Delete articles</li>
             <li>Set featured article</li>
-            <li>Edit the About page</li>
+            <li><a href="/admin/edit-about">Edit the About page</a></li>
             <li>View users' contact submissions <a href="/admin-contacts">Click here!</a></li>
         </ul>
 
@@ -34,6 +34,9 @@
             <input type="hidden" name="article_id" value="{{ article[0] }}">
             <button type="submit">Like</button>
             </form>
+
+            <a href="/edit-article/{{ article[0] }}">Edit</a>
+            <a href="/delete-article/{{ article[0] }}">Delete</a>
         
             <p>Likes: {{ like_counts[article[0]] }}</p>
             <p>Featured: {% if article[4] == 1 %}Yes{% else %}No{% endif %}</p>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <h1>Edit About Page</h1>
+    <a href="/admin-page">Go back to Admin Page</a>
+    
+    <form action="/admin/edit-about" method="POST">
+        <p>About Page Content:</p>
+        <textarea name="content" required>
+            {% if about_content %}
+                {{ about_content[1] }}
+            {% endif %}
+        </textarea>
+        
+        <button type="submit">Update About Page</button>
+    </form>
+
+</body>
+</html>

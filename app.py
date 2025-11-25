@@ -21,6 +21,91 @@ database=app.config['MYSQL_DB']
 
 cursor = conn.cursor()
 
+@app.route("/about")
+def about():
+    cursor.execute('''SELECT * FROM about''')
+    about_content = cursor.fetchone()
+    
+    if about_content:
+        content = about_content[1]
+    else:
+        content = "About page content coming soon."
+    
+    return render_template('about.html', content=content)
+
+
+@app.route("/admin/edit-about")
+def admin_edit_about():
+    if 'user_id' in session and session['user_role'] == 'admin':
+        cursor.execute('''SELECT * FROM about''')
+        about_content = cursor.fetchone()
+        
+        return render_template('admin-edit-about.html', about_content=about_content)
+    else:
+        return "Access denied. Admins only."
+
+
+@app.route("/admin/edit-about", methods=['POST'])
+def admin_edit_about_process():
+    if 'user_id' in session and session['user_role'] == 'admin':
+        content = request.form.get('content')
+        
+
+        cursor.execute('''INSERT INTO about (content) VALUES (%s)''', (content,))
+        conn.commit()
+        
+        return redirect('/about')
+    else:
+        return "Access denied. Admins only."
+    
+
+@app.route("/edit-article/<int:article_id>")
+def edit_article(article_id):
+    if 'user_id' in session and session['user_role'] == 'admin':
+        
+        cursor.execute('''SELECT * FROM articles WHERE id = %s''', (article_id,))
+        article = cursor.fetchone()
+        
+        return render_template('edit-article.html', article=article)
+    else:
+        return "Access denied. Admins only."
+
+
+@app.route("/edit-article/<int:article_id>", methods=['POST'])
+def edit_article_process(article_id):
+    if 'user_id' in session and session['user_role'] == 'admin':
+        title = request.form.get('title')
+        content = request.form.get('content')
+        
+        if request.form.get('is_featured'):
+            is_featured = "yes"
+        else:
+            is_featured = "no"
+
+    
+        cursor.execute('''UPDATE articles SET title = %s, content = %s, is_featured = %s 
+                       WHERE id = %s''', 
+                       (title, content, is_featured, article_id))
+        conn.commit()
+        
+        return redirect('/admin-page')
+    else:
+        return "Access denied. Admins only."
+    
+    
+
+@app.route("/delete-article/<int:article_id>")
+def delete_article(article_id):
+    if 'user_id' in session and session['user_role'] == 'admin':
+      
+        cursor.execute('''DELETE FROM articles WHERE id = %s''', (article_id,))
+        conn.commit()
+        
+        return redirect('/admin-page')
+    else:
+        return "Access denied. Admins only."
+    
+
 
 @app.route("/set-featured", methods=['POST'])
 def set_featured():
