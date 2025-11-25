@@ -22,6 +22,37 @@ database=app.config['MYSQL_DB']
 cursor = conn.cursor()
 
 
+@app.route("/add-articles")
+def add_article():
+    if 'user_id' in session and session['user_role'] == 'admin':
+        return render_template('add-articles.html')
+    else:
+        return "Access denied. Admins only."
+
+
+@app.route("/add-articles", methods=['POST'])
+def add_article_process():
+    if 'user_id' in session and session['user_role'] == 'admin':
+
+        title = request.form.get('title')
+        content = request.form.get('content')
+        
+        if request.form.get('is_featured'):
+            is_featured = "yes"
+        else:
+            is_featured = "no"
+
+        author_id = session['user_id']
+        
+        cursor.execute('''INSERT INTO articles (title, content, is_featured, author_id) 
+               VALUES (%s, %s, %s, %s)''', 
+               (title, content, is_featured, author_id))
+        conn.commit()
+        
+        return "Article added successfully! <a href='/admin-page'>Back to Dashboard</a>"
+    else:
+        return "Access denied. Admins only."
+    
 @app.route("/admin-contacts")
 def admin_contacts():
     if 'user_id' in session and session['user_role'] == 'admin':

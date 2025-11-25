@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Add New Article</h1>
+    <a href="/admin-page">Go back to admin page.</a>
+    
+    <form action="/add-articles" method="POST">
+        <p>Title: <input type="text" name="title" required></p>
+        <p>Content: <textarea name="content" required></textarea></p>
+        <p>Featured: <input type="checkbox" name="is_featured"></p>
+        <button type="submit">Add Article</button>
+    </form>
+</body>
+</html>
