@@ -53,6 +53,7 @@ def add_article_process():
     else:
         return "Access denied. Admins only."
     
+    
 @app.route("/admin-contacts")
 def admin_contacts():
     if 'user_id' in session and session['user_role'] == 'admin':
