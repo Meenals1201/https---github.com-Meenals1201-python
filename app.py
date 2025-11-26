@@ -277,7 +277,7 @@ def dashboard():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect('/homepage')
+    return redirect('/')
 
 @app.route("/login")
 def login():
@@ -292,6 +292,9 @@ def login_process():
         cursor.execute('''SELECT * FROM userstable WHERE email = %s AND password = %s''', (email, password))
                      
         user = cursor.fetchone()
+
+        cursor.fetchall()
+        
         if user:
 
             user_id, name, user_email, user_password, role, created_date = user 
