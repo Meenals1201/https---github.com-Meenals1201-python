@@ -6,13 +6,18 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>About IMM News Network</h1>
-    <a href="/">Home</a>
+      <h1>About IMM News Network</h1>
+    
+    {% if 'user_id' in session and session['user_role'] == 'admin' %}
+       
+    {% else %}
+        <a href="/">Home</a>
+    {% endif %}
     
     <p>{{ content }}</p>
     
     {% if 'user_id' in session and session['user_role'] == 'admin' %}
-        <p><a href="/admin/edit-about">Edit About Page</a></p>
+        
     {% endif %}
 </body>
 </html>

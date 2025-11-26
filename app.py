@@ -21,6 +21,25 @@ database=app.config['MYSQL_DB']
 
 cursor = conn.cursor()
 
+
+@app.route("/unlike", methods=['POST'])
+def unlike_article():
+    if 'user_id' in session:
+        user_id = session['user_id']
+        article_id = request.form.get('article_id')
+        
+        cursor.execute('''DELETE FROM likes WHERE user_id = %s AND article_id = %s''', 
+                      (user_id, article_id))
+        conn.commit()
+        
+        if session['user_role'] == 'admin':
+            return redirect('/admin-page')
+        else:
+            return redirect('/member-page')
+    else:
+        return redirect('/login')
+    
+
 @app.route("/about")
 def about():
     cursor.execute('''SELECT * FROM about''')
@@ -49,8 +68,9 @@ def admin_edit_about():
 def admin_edit_about_process():
     if 'user_id' in session and session['user_role'] == 'admin':
         content = request.form.get('content')
-        
 
+        cursor.fetchall()
+        
         cursor.execute('''INSERT INTO about (content) VALUES (%s)''', (content,))
         conn.commit()
         
@@ -120,6 +140,8 @@ def set_featured():
         return redirect('/admin-page')
     else:
         return "Access denied. Admins only."
+    
+
 
 @app.route("/like", methods=['POST'])
 def like_article():
@@ -189,24 +211,38 @@ def admin_contacts():
     else:
         return "Access denied. Admins only."
     
+
+# member page is here-----------------------
+
 @app.route("/member-page")
 def member_page():
     if 'user_id' in session and session['user_role'] == 'member':
         name = session['user_name']
+        user_id = session['user_id']
 
         cursor.execute('''SELECT * FROM articles''')
         articles = cursor.fetchall()
 
         like_counts = {}
+        user_likes = {}
+        
         for article in articles:
             article_id = article[0]
             cursor.execute('''SELECT COUNT(*) FROM likes WHERE article_id = %s''', (article_id,))
             like_count = cursor.fetchone()[0]
             like_counts[article_id] = like_count
+            
+          
+            cursor.execute('''SELECT * FROM likes WHERE user_id = %s AND article_id = %s''', (user_id, article_id))
+            user_liked = cursor.fetchone()
+            user_likes[article_id] = user_liked
 
-        return render_template('member-page.html', name=name, articles=articles, like_counts=like_counts)
+        return render_template('member-page.html', name=name, articles=articles, like_counts=like_counts, user_likes=user_likes)
     else:
         return redirect('/login')
+
+
+
 
 @app.route("/admin-page")
 def admin_page():
